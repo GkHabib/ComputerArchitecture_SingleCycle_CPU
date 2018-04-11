@@ -14,11 +14,15 @@ module stack(clk, rst, push, pop, writeData, readData);
     else begin
       if(push) begin
         stackArray[pointer] <= writeData;
-        pointer = pointer + 1;
+        if(pointer < 7) begin
+          pointer = pointer + 1;
+        end
       end
       else begin
         if(pop) begin
-          pointer = pointer - 1;
+          if(pointer < 0) begin
+            pointer = pointer - 1;
+          end
         end
       end
     end
