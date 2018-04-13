@@ -1,4 +1,4 @@
-module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, jsb, Cout, Zout, opcodeFunc
+module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, jsb, Cout, Zout, opcodeFunc,
   aluOp);
     input clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, jsb;
     input[3:0] aluOp;

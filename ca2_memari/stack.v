@@ -4,9 +4,10 @@ module stack(clk, rst, push, pop, writeData, readData);
   output[11:0] readData;
   reg[11:0] stackArray[7:0];
   reg[2:0] pointer;
+  integer i;
   always@(posedge clk, posedge rst) begin
     if(rst) begin
-      for (int i=0; i<=7; i=i+1) begin
+      for (i=0; i<=7; i=i+1) begin
         stackArray[i] = 12'b0;
       end
       pointer = 3'b0;

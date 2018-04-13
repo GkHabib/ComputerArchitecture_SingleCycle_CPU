@@ -3,9 +3,10 @@ module dataMemory(clk, rst, writeEn, address, readData, writeData);
   input[7:0] address, writeData;
   output[7:0] readData;
   reg[7:0] dataArray[255:0];
+  integer i;
   always@(posedge clk, posedge rst) begin
     if(rst) begin
-      for (int i=0; i<=255; i=i+1) begin
+      for (i=0; i<=255; i=i+1) begin
         dataArray[i] = 8'b0;
       end
     end
