@@ -1,6 +1,6 @@
 module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, ret, Cout, Zout, opcodeFunc,
-  aluOp, cWriteEn, zWriteEn, halt);
-    input clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, ret, cWriteEn, zWriteEn;
+  aluOp, cWriteEn, zWriteEn, halt, pcEn);
+    input clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, ret, cWriteEn, zWriteEn, pcEn;
     input[3:0] aluOp;
     output Cout, Zout, halt;
     output[4:0] opcodeFunc;
@@ -10,7 +10,7 @@ module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ld
     wire[2:0] instMemInpMuxOutputWire;
     wire[7:0] regMemOutData1, regMemOutData2, regMemInData, aluInput, aluOutput, dataMemOutput;
     wire aluToC, cToAlu, aluToZ;
-    pc PC(.clk(clk), .rst(rst), .in(pcInputWire), .out(pcWire));
+    pc PC(.clk(clk), .rst(rst), .countEn(pcEn), .in(pcInputWire), .out(pcWire));
     instructionMemory INST_MEM(.PC(pcWire), .dataPathOut(instMemWire), .CuOut(opcodeFunc), .halt(halt));
     mux3bit READ2_ADR_MUX(.in1(instMemWire[7:5]), .in2(instMemWire[13:11]), .control(stm), .out(instMemInpMuxOutputWire));
     registerMemory REG_MEM(.clk(clk), .rst(rst), .writeEn(regWriteEn), .readAdr1(instMemWire[10:8]),
@@ -29,7 +29,7 @@ module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ld
     adder12bit PC_ADD1(.in1(8'b00000001), .in2(pcWire), .out(pcAdded1Wire));
     signExt SIGN_EXT(.in(instMemWire[7:0]), .out(signExtOut));
     adder12bit BrADR_ADDER(.in1(signExtOut), .in2(pcAdded1Wire), .out(branchAddedPcWire));
-    mux12bit BrADDER_PC_MUX(.in2(pcAdded1Wire), .in1(branchAddedPcWire), .control(branch), .out(branchAddedOrPcWire));
-    mux12bit PrevMUX_DirectADR_MUX(.in2(branchAddedOrPcWire), .in1(instMemWire[11:0]), .control(jmp), .out(jmpAddrOrBranchAddedPc));
+    mux12bit BrADDER_PC_MUX(.in1(pcAdded1Wire), .in2(branchAddedPcWire), .control(branch), .out(branchAddedOrPcWire));
+    mux12bit PrevMUX_DirectADR_MUX(.in1(branchAddedOrPcWire), .in2(instMemWire[11:0]), .control(jmp), .out(jmpAddrOrBranchAddedPc));
     mux12bit PrevMUX_STACK_MUX(.in1(jmpAddrOrBranchAddedPc), .in2(stackReadedWire), .control(ret), .out(pcInputWire));
 endmodule
