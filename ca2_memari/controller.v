@@ -49,12 +49,12 @@ module controller(clk, rst, start, push, pop,
         5'b01101 : begin regWriteEn=1; cWriteEn=1; zWriteEn=1; aluOp= 4'b0101; immAndmem=1; end
         5'b01110 : begin regWriteEn=1; cWriteEn=1; zWriteEn=1; aluOp= 4'b0110; immAndmem=1; end
         5'b01111 : begin regWriteEn=1; cWriteEn=1; zWriteEn=1; aluOp= 4'b0111; immAndmem=1; end
-        5'b11000 : begin regWriteEn=1; cWriteEn=1; zWriteEn=1; aluOp= 4'b1000 end
-        5'b11001 : begin regWriteEn=1; cWriteEn=1; zWriteEn=1; aluOp= 4'b1001 end
-        5'b11010 : begin regWriteEn=1; zWriteEn=1; aluOp= 4'b1010 end
-        5'b11011 : begin regWriteEn=1; zWriteEn=1; aluOp= 4'b1011 end
-        5'b10000 : begin regWriteEn=1; immAndmem=1; ldm=1; aluOp=4'b0000 end
-        5'b10001 : begin memWriteEn=1; immAndmem=1; stm=1; aluOp=4'b0000 end
+        5'b11000 : begin regWriteEn=1; cWriteEn=1; zWriteEn=1; aluOp= 4'b1000; end
+        5'b11001 : begin regWriteEn=1; cWriteEn=1; zWriteEn=1; aluOp= 4'b1001; end
+        5'b11010 : begin regWriteEn=1; zWriteEn=1; aluOp= 4'b1010; end
+        5'b11011 : begin regWriteEn=1; zWriteEn=1; aluOp= 4'b1011; end
+        5'b10000 : begin regWriteEn=1; immAndmem=1; ldm=1; aluOp=4'b0000; end
+        5'b10001 : begin memWriteEn=1; immAndmem=1; stm=1; aluOp=4'b0000; end
         5'b10100 : begin branch =  Zin;  end
         5'b10101 : begin branch = ~Zin; end
         5'b10110 : begin branch =  Cin;  end
