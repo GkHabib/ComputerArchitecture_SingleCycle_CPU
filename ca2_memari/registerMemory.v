@@ -3,7 +3,7 @@ module registerMemory(clk, rst, writeEn, readAdr1, readAdr2, writeAdr, readData1
   output[7:0] readData1, readData2;
   input[7:0] writeData;
   input clk, rst, writeEn;
-  reg[8:0] registersMemory[4095:0];
+  reg[7:0] registersMemory[7:0];
   integer i;
   always@(posedge clk, posedge rst) begin
     if(rst) begin
