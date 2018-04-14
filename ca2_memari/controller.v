@@ -4,10 +4,10 @@ module controller(clk, rst, start, push, pop,
    opcodeFunc, aluOp, cWriteEn, zWriteEn,
    halt, pcEn);
   input[4:0] opcodeFunc;
-  input clk, start, halt, Cin, Zin;
+  input clk, rst, start, halt, Cin, Zin;
   output reg push, pop,
      memWriteEn, regWriteEn, immAndmem,
-     stm, ldm, branch, jmp, ret, cWriteEn, zWriteEn, pcEn, rst;
+     stm, ldm, branch, jmp, ret, cWriteEn, zWriteEn, pcEn;
   output reg[3:0] aluOp;
   reg[1:0] ps, ns;
   parameter [1:0] IDLE=0, starting=1, computing=2;
@@ -29,7 +29,7 @@ module controller(clk, rst, start, push, pop,
     aluOp= 4'b0000;
     case(ps)
       IDLE: begin end
-      starting: begin rst=1; end
+      starting: begin  end
       computing:begin
         pcEn=1;
         case(opcodeFunc)
