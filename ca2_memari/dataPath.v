@@ -1,8 +1,8 @@
-module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, jsb, Cout, Zout, opcodeFunc,
-  aluOp);
-    input clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, jsb;
+module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, ret, Cout, Zout, opcodeFunc,
+  aluOp, cWriteEn, zWriteEn, halt);
+    input clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ldm, branch, jmp, ret, cWriteEn, zWriteEn;
     input[3:0] aluOp;
-    output Cout, Zout;
+    output Cout, Zout, halt;
     output[4:0] opcodeFunc;
     wire[11:0] pcWire, pcAdded1Wire, signExtOut, branchAddedPcWire, branchAddedOrPcWire, jmpAddrOrBranchAddedPc,
      stackReadedWire, pcInputWire;
@@ -11,7 +11,7 @@ module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ld
     wire[7:0] regMemOutData1, regMemOutData2, regMemInData, aluInput, aluOutput, dataMemOutput;
     wire aluToC, cToAlu, aluToZ;
     pc PC(.clk(clk), .rst(rst), .in(pcInputWire), .out(pcWire));
-    instructionMemory INST_MEM(.PC(pcWire), .dataPathOut(instMemWire), .CuOut(opcodeFunc));
+    instructionMemory INST_MEM(.PC(pcWire), .dataPathOut(instMemWire), .CuOut(opcodeFunc), .halt(halt));
     mux3bit READ2_ADR_MUX(.in1(instMemWire[7:5]), .in2(instMemWire[13:11]), .control(stm), .out(instMemInpMuxOutputWire));
     registerMemory REG_MEM(.clk(clk), .rst(rst), .writeEn(regWriteEn), .readAdr1(instMemWire[10:8]),
      .readAdr2(instMemInpMuxOutputWire), .writeAdr(instMemWire[13:11]), .readData1(regMemOutData1), .readData2(regMemOutData2),
@@ -19,9 +19,9 @@ module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ld
     mux8bit RegMEM_TO_ALU_MUX(.in1(regMemOutData2), .in2(instMemWire[7:0]), .control(immAndmem), .out(aluInput));
     ALU AlU(.in1(regMemOutData1), .in2(aluInput), .cIn(cToAlu), .sc(instMemWire[7:5]), .aluOp(aluOp), .zero(aluToZ),
      .cOut(aluToC), .out(aluOutput));
-    flipflop C(.clk(clk), .rst(rst), .in(aluToC), .out(cToAlu));
+    flipflop C(.clk(clk), .rst(rst), .writeEn(cWriteEn), .in(aluToC), .out(cToAlu));
     assign Cout = cToAlu;
-    flipflop Z(.clk(clk), .rst(rst), .in(aluToZ), .out(Zout));
+    flipflop Z(.clk(clk), .rst(rst), .writeEn(zWriteEn), .in(aluToZ), .out(Zout));
     dataMemory DATA_MEM(.clk(clk), .rst(rst), .writeEn(memWriteEn), .address(aluOutput), .readData(dataMemOutput),
      .writeData(regMemOutData2));
     mux8bit MEM_ALU_TO_RegMem_MUX(.in1(aluOutput), .in2(dataMemOutput), .control(ldm), .out(regMemInData));
@@ -31,5 +31,5 @@ module dataPath (clk, rst, push, pop, memWriteEn, regWriteEn, immAndmem, stm, ld
     adder12bit BrADR_ADDER(.in1(signExtOut), .in2(pcAdded1Wire), .out(branchAddedPcWire));
     mux12bit BrADDER_PC_MUX(.in2(pcAdded1Wire), .in1(branchAddedPcWire), .control(branch), .out(branchAddedOrPcWire));
     mux12bit PrevMUX_DirectADR_MUX(.in2(branchAddedOrPcWire), .in1(instMemWire[11:0]), .control(jmp), .out(jmpAddrOrBranchAddedPc));
-    mux12bit PrevMUX_STACK_MUX(.in1(jmpAddrOrBranchAddedPc), .in2(stackReadedWire), .control(jsb), .out(pcInputWire));
+    mux12bit PrevMUX_STACK_MUX(.in1(jmpAddrOrBranchAddedPc), .in2(stackReadedWire), .control(ret), .out(pcInputWire));
 endmodule

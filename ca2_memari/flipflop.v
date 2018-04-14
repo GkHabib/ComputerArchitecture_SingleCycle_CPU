@@ -1,4 +1,4 @@
-module flipflop(clk, rst, in, out);
+module flipflop(clk, rst, writeEn, in, out);
   input in, clk, rst;
   output reg out;
   always @(posedge clk, posedge rst) begin
@@ -6,7 +6,9 @@ module flipflop(clk, rst, in, out);
       out <= 1'b0;
     end
     else begin
+      if begin
       out <= in;
+      end
     end
   end
 endmodule
