@@ -70,3 +70,5 @@ module controller(clk, rst, start, push, pop,
   always @ (posedge clk) begin
     ps <= ns;
   end
+
+endmodule
