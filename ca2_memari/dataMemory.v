@@ -7,7 +7,7 @@ module dataMemory(clk, rst, writeEn, address, readData, writeData);
   always@(posedge clk, posedge rst) begin
     if(rst) begin
       for (i=0; i<=255; i=i+1) begin
-        dataArray[i] = 8'b0;
+        //dataArray[i] = 8'b0;
       end
     end
     else begin
@@ -17,6 +17,7 @@ module dataMemory(clk, rst, writeEn, address, readData, writeData);
     end
   end
   initial begin
+    dataArray[100] = 8'b00000001;
     dataArray[101] = 8'b00000001;
     dataArray[102] = 8'b00000010;
     dataArray[103] = 8'b00000011;

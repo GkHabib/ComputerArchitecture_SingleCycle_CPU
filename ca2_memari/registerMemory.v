@@ -1,5 +1,5 @@
 module registerMemory(clk, rst, writeEn, readAdr1, readAdr2, writeAdr, readData1, readData2, writeData);
-  input[3:0] readAdr1 , readAdr2, writeAdr;
+  input[2:0] readAdr1 , readAdr2, writeAdr;
   output[7:0] readData1, readData2;
   input[7:0] writeData;
   input clk, rst, writeEn;

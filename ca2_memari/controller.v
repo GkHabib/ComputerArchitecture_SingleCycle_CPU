@@ -2,9 +2,10 @@ module controller(clk, rst, start, push, pop,
    memWriteEn, regWriteEn, immAndmem,
    stm, ldm, branch, jmp, ret, Cin, Zin,
    opcodeFunc, aluOp, cWriteEn, zWriteEn,
-   halt, pcEn);
+   halt, pcEn, pc);
   input[4:0] opcodeFunc;
   input clk, rst, start, halt, Cin, Zin;
+  input[11:0] pc;
   output reg push, pop,
      memWriteEn, regWriteEn, immAndmem,
      stm, ldm, branch, jmp, ret, cWriteEn, zWriteEn, pcEn;
@@ -15,14 +16,14 @@ module controller(clk, rst, start, push, pop,
   always@(ps, start, halt) begin
     ns= IDLE;
     case(ps)
-      IDLE: ns = (start)? IDLE:starting;
+      IDLE: ns = (start)? starting:IDLE;
       starting: ns = (start)? starting:computing;
       computing: ns = (halt)? IDLE:computing;
       default: ns = IDLE;
     endcase
   end
 
-  always@(ps, start, halt) begin
+  always@(ps, start, halt, pc) begin
     push=0; pop=0;
     memWriteEn=0; regWriteEn=0; immAndmem=0; pcEn=0;
     stm=0; ldm=0; branch=0; jmp=0; ret=0; cWriteEn=0; zWriteEn=0;
